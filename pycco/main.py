@@ -35,6 +35,7 @@ def generate_documentation(source, outdir=None, preserve_paths=True):
     if not outdir:
         raise TypeError("Missing the required 'outdir' keyword argument.")
     fh = open(source, "r")
+    import pdb; pdb.set_trace()
     sections = parse(source, fh.read())
     highlight(source, sections, preserve_paths=preserve_paths, outdir=outdir)
     return generate_html(source, sections, preserve_paths=preserve_paths, outdir=outdir)
@@ -292,10 +293,17 @@ languages = {
         "multistart": "--[[", "mutliend": "--]]"},
 
     ".erl": { "name": "erlang", "symbol": "%%" },
+
+    ".css": { "name": "css", "symbol": None, "multistart": "/*", "multiend": "*/"},
 }
 
 # Build out the appropriate matchers and delimiters for each language.
 for ext, l in languages.items():
+    
+    #for languages like CSS, you won't have a symobl for single-line comments. fake one.
+    if l["symbol"] == None:
+        l["symbol"] = '--'
+    
     # Does the line begin with a comment?
     l["comment_matcher"] = re.compile(r"^\s*" + l["symbol"] + "\s?")
 
