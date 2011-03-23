@@ -35,7 +35,6 @@ def generate_documentation(source, outdir=None, preserve_paths=True):
     if not outdir:
         raise TypeError("Missing the required 'outdir' keyword argument.")
     fh = open(source, "r")
-    import pdb; pdb.set_trace()
     sections = parse(source, fh.read())
     highlight(source, sections, preserve_paths=preserve_paths, outdir=outdir)
     return generate_html(source, sections, preserve_paths=preserve_paths, outdir=outdir)
@@ -81,6 +80,7 @@ def parse(source, code):
 
     for line in lines:
 
+        import pdb; pdb.set_trace()
         # Only go into multiline comments section when one of the delimiters is
         # found to be at the start of a line
         if all(multi_line_delimiters) and any([line.lstrip().startswith(delim) for delim in multi_line_delimiters]):
@@ -88,6 +88,9 @@ def parse(source, code):
                 multi_line = True
 
             else:
+                multi_line = False
+
+            if line.lstrip().startswith(multi_line_delimiters[0]) and line.lstrip().endswith(multi_line_delimiters[1]):
                 multi_line = False
 
             # Get rid of the delimiters so that they aren't in the final docs
@@ -302,7 +305,7 @@ for ext, l in languages.items():
     
     #for languages like CSS, you won't have a symobl for single-line comments. fake one.
     if l["symbol"] == None:
-        l["symbol"] = '--'
+        l["symbol"] = '/**/'
     
     # Does the line begin with a comment?
     l["comment_matcher"] = re.compile(r"^\s*" + l["symbol"] + "\s?")
