@@ -305,7 +305,7 @@ for ext, l in languages.items():
     
     #for languages like CSS, you won't have a symobl for single-line comments. fake one.
     if l["symbol"] == None:
-        l["symbol"] = '/**/'
+        l["symbol"] = '___'
     
     # Does the line begin with a comment?
     l["comment_matcher"] = re.compile(r"^\s*" + l["symbol"] + "\s?")
